@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Info, FileText, User, Calendar } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, API_URL } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +27,19 @@ const Dashboard = () => {
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
+
+  // Filter articles based on search term (client-side only, no API call)
+  const searchTerm = searchParams.get('search') || '';
+  const filteredArticles = useMemo(() => {
+    return articles.filter(article => {
+      if (!searchTerm) return true;
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        article.title?.toLowerCase().includes(searchLower) ||
+        article.content?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [articles, searchTerm]);
 
   const getExcerpt = (htmlContent) => {
     const tempDiv = document.createElement('div');
@@ -48,9 +62,9 @@ const Dashboard = () => {
           <Loader2 className="w-12 h-12 animate-spin text-primary" />
           <p className="font-medium">Loading articles...</p>
         </div>
-      ) : articles.length > 0 ? (
+      ) : filteredArticles.length > 0 ? (
         <div className="space-y-3">
-          {articles.map(article => (
+          {filteredArticles.map(article => (
             <div
               key={article._id}
               onClick={() => navigate(`/article/${article._id}`)}

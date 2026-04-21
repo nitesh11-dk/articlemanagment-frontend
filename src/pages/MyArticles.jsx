@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useSearchParams } from 'react-router-dom';
 import ArticleModal from '../components/ArticleModal';
 import { Plus, Loader2, Info, FileText, Edit3, Trash2, Send, Clock, CheckCircle } from 'lucide-react';
 
 const MyArticles = () => {
   const { user, API_URL } = useAuth();
+  const [searchParams] = useSearchParams();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,6 +31,19 @@ const MyArticles = () => {
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
+
+  // Filter articles based on search term (client-side only, no API call)
+  const searchTerm = searchParams.get('search') || '';
+  const filteredArticles = useMemo(() => {
+    return articles.filter(article => {
+      if (!searchTerm) return true;
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        article.title?.toLowerCase().includes(searchLower) ||
+        article.content?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [articles, searchTerm]);
 
   const handleCreateArticle = async (formData) => {
     try {
@@ -122,7 +137,7 @@ const MyArticles = () => {
           <Loader2 className="w-12 h-12 animate-spin text-primary" />
           <p className="font-medium">Loading your articles...</p>
         </div>
-      ) : articles.length > 0 ? (
+      ) : filteredArticles.length > 0 ? (
         <div className="glass rounded-2xl border border-zinc-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -135,7 +150,7 @@ const MyArticles = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100">
-                {articles.map(article => (
+                {filteredArticles.map(article => (
                   <tr key={article._id} className="hover:bg-zinc-50/50 transition-colors">
                     <td className="px-6 py-4">
                       <div>

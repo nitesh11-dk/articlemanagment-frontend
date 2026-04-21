@@ -44,7 +44,7 @@ const Navbar = ({ onMenuClick, isMobileMenuOpen }) => {
       </div>
 
       {/* Center: Search bar */}
-      <div className="flex-1 max-w-xl mx-4">
+      <div className="flex-1 max-w-xl mx-2 sm:mx-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
           <input
@@ -66,7 +66,7 @@ const Navbar = ({ onMenuClick, isMobileMenuOpen }) => {
       </div>
 
       {/* Right: User icon or auth buttons */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {user ? (
           <div className="flex items-center gap-3">
             <div className="hidden md:flex flex-col items-end">
@@ -81,14 +81,14 @@ const Navbar = ({ onMenuClick, isMobileMenuOpen }) => {
           <div className="flex items-center gap-2">
             <Link 
               to="/login" 
-              className="hidden sm:flex items-center gap-2 text-sm font-bold text-text-secondary hover:text-primary transition-all"
+              className="flex items-center gap-2 text-sm font-bold text-text-secondary hover:text-primary transition-all"
             >
               <LogIn className="w-4 h-4" />
-              Login
+              <span className="hidden sm:inline">Login</span>
             </Link>
             <Link 
               to="/register" 
-              className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center gap-2"
+              className="px-3 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               <span className="hidden sm:inline">Sign Up</span>
