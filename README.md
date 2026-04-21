@@ -2,6 +2,12 @@
 
 Full-stack app with JWT auth, role-based access control, and ownership logic using Node.js, Express, React, MongoDB.
 
+## Deployment
+
+**Backend**: https://article-managment-backend.onrender.com (Render)
+
+**Frontend**: https://articlemanagment-frontend.vercel.app/ (Vercel)
+
 ## Setup Instructions
 
 **Prerequisites**: Node.js v16+, MongoDB, pnpm
